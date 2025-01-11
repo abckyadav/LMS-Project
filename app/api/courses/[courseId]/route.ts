@@ -24,7 +24,6 @@ export async function PATCH(
         ...values,
       },
     });
-    console.log("course:", course);
 
     return NextResponse.json(course);
   } catch (error) {
