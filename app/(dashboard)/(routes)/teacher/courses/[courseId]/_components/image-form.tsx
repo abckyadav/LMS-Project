@@ -3,15 +3,13 @@
 import { useState } from "react";
 import * as z from "zod";
 import axios from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Course } from "@prisma/client";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
-import Image from "next/image";
 import FileUpload from "@/components/file-upload";
 
 type ImageFormProps = {
@@ -32,24 +30,22 @@ export default function ImageForm({ initialData, courseId }: ImageFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((currentValue) => !currentValue);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      imageUrl: initialData?.imageUrl || "",
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: { imageUrl: string }) => {
     try {
+      formSchema.safeParse(values);
       await axios.patch(`/api/courses/${courseId}`, values);
       toast.success("Course updated successfully");
       toggleEdit();
       router.refresh();
-    } catch {
-      toast.error("Something went wrong while updating course");
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast.error(error.errors[0].message);
+      } else {
+        toast.error("Something went wrong while updating course");
+      }
     }
   };
+
   return (
     <div className="mt-6 border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-cneter justify-between">
