@@ -88,7 +88,6 @@ export default async function CourseIdPage({
             <span>Complete all fields {completionText}</span>
           </div>
 
-          {/* Add actions */}
           <Actions
             disabled={!IsCompelete}
             courseId={params.courseId}
