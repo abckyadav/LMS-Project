@@ -45,7 +45,7 @@ export async function POST(
       {
         quantity: 1,
         price_data: {
-          currency: "INR",
+          currency: "USD",
           product_data: {
             name: course.title,
             description: course.description!,
@@ -64,7 +64,7 @@ export async function POST(
         stripeCustomerId: true,
       },
     });
-    console.log("stripeCustomer:", stripeCustomer);
+    console.log("stripeCustomer:1", stripeCustomer);
 
     if (!stripeCustomer) {
       const customer = await stripe.customers.create({
@@ -78,9 +78,10 @@ export async function POST(
           stripeCustomerId: customer.id,
         },
       });
-      console.log("stripeCustomer:", stripeCustomer);
+      console.log("stripeCustomer:2", stripeCustomer);
     }
 
+    console.log("session:started", stripeCustomer.stripeCustomerId);
     const session = await stripe.checkout.sessions.create({
       customer: stripeCustomer.stripeCustomerId,
       line_items,
@@ -92,7 +93,7 @@ export async function POST(
         userId: user.id,
       },
     });
-    console.log("session:", session);
+    console.log("session:end", session);
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
