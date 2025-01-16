@@ -37,7 +37,7 @@ export default function VideoPlayer({
         await axios.put(
           `/api/courses/${courseId}/chapters/${chapterId}/progress`,
           {
-            isCompletd: true,
+            isCompleted: true,
           }
         );
 
