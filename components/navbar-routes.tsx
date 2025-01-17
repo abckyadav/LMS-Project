@@ -2,7 +2,7 @@
 
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import { isTeacher } from "@/lib/teacher";
 
 export const NavbarRoutes = () => {
   const pathname = usePathname();
-  const { userId } =  useAuth();
+  const { userId } = useAuth();
 
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isCoursePage = pathname?.includes("/courses");
@@ -20,9 +20,13 @@ export const NavbarRoutes = () => {
   return (
     <>
       {isSearchPage ? (
-        <div className="hidden md:block">
-          <SearchInput />
-        </div>
+        <Suspense
+          fallback={<div className="h-8 bg-slate-200 animate-pulse rounded" />}
+        >
+          <div className="hidden md:block">
+            <SearchInput />
+          </div>
+        </Suspense>
       ) : null}
       <div className="flex gap-x-2 ml-auto">
         {isTeacherPage || isCoursePage ? (

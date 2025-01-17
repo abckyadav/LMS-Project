@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 import { IconType } from "react-icons/lib";
 import qs from "query-string";
 
@@ -22,7 +22,7 @@ export default function CategoryItem({
   const currentTitle = searchParams.get("title");
 
   const isSelected = currentCategoryId === value;
-  console.log('isSelected:', isSelected)
+  console.log("isSelected:", isSelected);
 
   const onClick = () => {
     const url = qs.stringifyUrl(
@@ -40,16 +40,20 @@ export default function CategoryItem({
   };
 
   return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 transiotion",
-        isSelected && "border-sky-700 bg-sky-200/20 text-sky-800"
-      )}
-      type="button"
+    <Suspense
+      fallback={<div className="h-8 bg-slate-200 animate-pulse rounded" />}
     >
-      {Icon && <Icon size={20} />}
-      <div className="truncate">{label}</div>
-    </button>
+      <button
+        onClick={onClick}
+        className={cn(
+          "py-2 px-3 text-sm border border-slate-200 rounded-full flex items-center gap-x-1 hover:border-sky-700 transiotion",
+          isSelected && "border-sky-700 bg-sky-200/20 text-sky-800"
+        )}
+        type="button"
+      >
+        {Icon && <Icon size={20} />}
+        <div className="truncate">{label}</div>
+      </button>
+    </Suspense>
   );
 }
