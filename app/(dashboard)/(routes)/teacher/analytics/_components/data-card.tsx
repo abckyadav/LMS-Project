@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPrice } from "@/lib/format";
 
 type DataCardProps = {
-  value: number;
+  value: number | undefined;
   label: string;
   shouldFormat?: boolean;
 };
@@ -17,7 +17,7 @@ export default function DataCard({
         <CardTitle className="text-sm font-medium">{label}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div>{shouldFormat ? formatPrice(value) : value}</div>
+        <div>{shouldFormat ? formatPrice(value ?? 0) : value}</div>
       </CardContent>
     </Card>
   );
